@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="Common/Common.csproj" />
   <Project Path="dCom/dCom.csproj" />
+  <Project Path="Modbus/Modbus.csproj" />
+  <Project Path="ProcessingModule/ProcessingModule.csproj" />
 </Solution>
