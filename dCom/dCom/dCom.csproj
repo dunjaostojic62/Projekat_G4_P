@@ -8,4 +8,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Modbus\Modbus.csproj" />
+    <ProjectReference Include="..\ProcessingModule\ProcessingModule.csproj" />
+  </ItemGroup>
+
 </Project>
