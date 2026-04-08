@@ -21,18 +21,42 @@ namespace Modbus.ModbusFunctions
             CheckArguments(MethodBase.GetCurrentMethod(), typeof(ModbusWriteCommandParameters));
         }
 
-        /// <inheritdoc />
         public override byte[] PackRequest()
         {
-            //TO DO: IMPLEMENT
-            throw new NotImplementedException();
+            ModbusWriteCommandParameters p = this.CommandParameters as ModbusWriteCommandParameters;
+            byte[] packet = new byte[12];
+
+            packet[0] = (byte)(p.TransactionId >> 8);
+            packet[1] = (byte)(p.TransactionId);
+            packet[2] = (byte)(p.ProtocolId >> 8);
+            packet[3] = (byte)(p.ProtocolId);
+            packet[4] = (byte)(p.Length >> 8);
+            packet[5] = (byte)(p.Length);
+            packet[6] = p.UnitId;
+            packet[7] = p.FunctionCode;
+            packet[8] = (byte)(p.OutputAddress >> 8);
+            packet[9] = (byte)(p.OutputAddress);
+            packet[10] = (byte)(p.Value == 1 ? 0xFF : 0x00);
+            packet[11] = 0x00;
+
+            return packet;
         }
 
-        /// <inheritdoc />
         public override Dictionary<Tuple<PointType, ushort>, ushort> ParseResponse(byte[] response)
         {
-            //TO DO: IMPLEMENT
-            throw new NotImplementedException();
+            ModbusWriteCommandParameters p = this.CommandParameters as ModbusWriteCommandParameters;
+            var result = new Dictionary<Tuple<PointType, ushort>, ushort>();
+
+            if (response[7] == 0x85)
+            {
+                HandeException(response[8]);
+                return result;
+            }
+
+            ushort value = p.Value;
+            result.Add(new Tuple<PointType, ushort>(PointType.DIGITAL_OUTPUT, p.OutputAddress), value);
+
+            return result;
         }
     }
 }
