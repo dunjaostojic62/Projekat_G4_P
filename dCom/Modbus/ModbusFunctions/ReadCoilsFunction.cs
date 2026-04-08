@@ -7,9 +7,7 @@ using System.Reflection;
 
 namespace Modbus.ModbusFunctions
 {
-    /// <summary>
-    /// Class containing logic for parsing and packing modbus read coil functions/requests.
-    /// </summary>
+    
     public class ReadCoilsFunction : ModbusFunction
     {
         /// <summary>
@@ -24,15 +22,47 @@ namespace Modbus.ModbusFunctions
         /// <inheritdoc/>
         public override byte[] PackRequest()
         {
-            //TO DO: IMPLEMENT
-            throw new NotImplementedException();
+            ModbusReadCommandParameters p = this.CommandParameters as ModbusReadCommandParameters;
+            byte[] packet = new byte[12];
+
+            packet[0] = (byte)(p.TransactionId >> 8);
+            packet[1] = (byte)(p.TransactionId);
+            packet[2] = (byte)(p.ProtocolId >> 8);
+            packet[3] = (byte)(p.ProtocolId);
+            packet[4] = (byte)(p.Length >> 8);
+            packet[5] = (byte)(p.Length);
+            packet[6] = p.UnitId;
+            packet[7] = p.FunctionCode;
+            packet[8] = (byte)(p.StartAddress >> 8);
+            packet[9] = (byte)(p.StartAddress);
+            packet[10] = (byte)(p.Quantity >> 8);
+            packet[11] = (byte)(p.Quantity);
+
+            return packet;
         }
 
         /// <inheritdoc />
         public override Dictionary<Tuple<PointType, ushort>, ushort> ParseResponse(byte[] response)
         {
-            //TO DO: IMPLEMENT
-            throw new NotImplementedException();
+            ModbusReadCommandParameters p = this.CommandParameters as ModbusReadCommandParameters;
+            var result = new Dictionary<Tuple<PointType, ushort>, ushort>();
+
+            if (response[7] == 0x81)
+            {
+                HandeException(response[8]);
+                return result;
+            }
+
+            int byteCount = response[8];
+            for (int i = 0; i < p.Quantity; i++)
+            {
+                int byteIndex = i / 8;
+                int bitIndex = i % 8;
+                ushort value = (ushort)((response[9 + byteIndex] >> bitIndex) & 1);
+                result.Add(new Tuple<PointType, ushort>(PointType.DIGITAL_OUTPUT, (ushort)(p.StartAddress + i)), value);
+            }
+
+            return result;
         }
     }
 }
