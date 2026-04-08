@@ -44,6 +44,7 @@
     <Compile Include="Connection\FunctionExecutor.cs" />
     <Compile Include="Connection\IConnection.cs" />
     <Compile Include="Connection\TCPConnection.cs" />
+    <Compile Include="FunctionFactory.cs" />
     <Compile Include="FunctionParameters\ModbusCommandParameters.cs" />
     <Compile Include="FunctionParameters\ModbusReadCommandParameters.cs" />
     <Compile Include="FunctionParameters\ModbusWriteCommandParameters.cs" />
