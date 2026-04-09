@@ -1,6 +1,6 @@
 <Solution>
-  <Project Path="Common/Common.csproj" />
+  <Project Path="Common/Common.csproj" Id="0967a049-e2b7-4763-8f85-3068484f7f43" />
   <Project Path="dCom/dCom.csproj" />
-  <Project Path="Modbus/Modbus.csproj" />
-  <Project Path="ProcessingModule/ProcessingModule.csproj" />
+  <Project Path="Modbus/Modbus.csproj" Id="ed85551c-6300-46c6-8af4-7cfc87ac6539" />
+  <Project Path="ProcessingModule/ProcessingModule.csproj" Id="deab2b65-87e5-4ca9-8ba6-5351cc1adcad" />
 </Solution>

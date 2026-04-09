@@ -1,13 +1,8 @@
-﻿using System.Text;
+﻿using dCom.Exceptions;
+using dCom.ViewModel;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace dCom
 {
@@ -18,7 +13,35 @@ namespace dCom
     {
         public MainWindow()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+                this.Closed += Window_Closed;
+                DataContext = new MainViewModel();
+
+            }
+            catch (ConfigurationException confEx)
+            {
+                MessageBox.Show($"{confEx.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unexpected error occured!{Environment.NewLine}Stack trace:{Environment.NewLine}{ex.StackTrace}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+            }
+        }
+
+        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ControlWindow cw = new ControlWindow(dgPoints.SelectedItem as BasePointItem);
+            cw.Owner = this;
+            cw.ShowDialog();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            (DataContext as IDisposable).Dispose();
         }
     }
 }
